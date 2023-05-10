@@ -23,18 +23,18 @@ if __name__ == '__main__':
     interval_cycles = int(args.us / 3)
 
     attacks = {
-        'l1pp': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_l1pp 1000 &',
-        'l3pp': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_l3pp 1000 &',
-        'fr': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_fr /home/zechengh/Mastik/gnupg-1.4.13/g10/gpg &',
-        'ff': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_ff /home/zechengh/Mastik/gnupg-1.4.13/g10/gpg &',
-        'spectrev1': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/spectre-v1/spectrev1 &',
-        'spectrev2': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/spectre-v2/spectrev2 &',
-        'spectrev3': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/meltdown/memdump &',
-        'spectrev4': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/spectre-ssb/spectrev4 &',
-        }
+        #'l1pp': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_l1pp 1000 &',
+        #'l3pp': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_l3pp 1000 &',
+        #'fr': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_fr /home/zechengh/Mastik/gnupg-1.4.13/g10/gpg &',
+        #'ff': 'taskset 0x8 /home/zechengh/Mastik/exp/test_workspace/spy_ff /home/zechengh/Mastik/gnupg-1.4.13/g10/gpg &',
+        'spectrev1': 'taskset 0x8 /home/arnabjyoti/safeside/build/demos/spectre_v1_pht_sa &',
+        #'spectrev2': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/spectre-v2/spectrev2 &',
+        #'spectrev3': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/meltdown/memdump &',
+        #'spectrev4': 'taskset 0x8 /home/zechengh/Mastik/ad/attack/spectre-ssb/spectrev4 &',
+    }
 
-    gpg_command = 'taskset 0x8 /home/zechengh/Mastik/ad/bg_program/run_gpg.sh'
-    spec_command = '/home/zechengh/Mastik/ad/bg_program/run_spec.py'
+    #gpg_command = 'taskset 0x8 /home/zechengh/Mastik/ad/bg_program/run_gpg.sh'
+    #spec_command = '/home/zechengh/Mastik/ad/bg_program/run_spec.py'
 
     save_data_dir = 'data/{bg_program}/{us}us/'.format(
         bg_program=args.bg_program,
@@ -89,29 +89,30 @@ if __name__ == '__main__':
     monitor_process = subprocess.Popen(cmd.split())
     monitor_status = monitor_process.wait()
 
+
     # With gpg running
-    for split in ['train', 'ref_and_val', 'test']:
-        gpg_process = subprocess.Popen(gpg_command.split())
-        time.sleep(10)
-        cmd = monitor_cmd_fn(save_data_name='{split}_normal_with_gpg.csv'.format(
-            split=split,
-            )
-        )
-        monitor_process = subprocess.Popen(cmd.split())
-        monitor_status = monitor_process.wait()
-        gpg_process.terminate()
+    #for split in ['train', 'ref_and_val', 'test']:
+    #    gpg_process = subprocess.Popen(gpg_command.split())
+    #    time.sleep(10)
+    #    cmd = monitor_cmd_fn(save_data_name='{split}_normal_with_gpg.csv'.format(
+    #        split=split,
+    #        )
+    #    )
+    #    monitor_process = subprocess.Popen(cmd.split())
+    #    monitor_status = monitor_process.wait()
+    #    gpg_process.terminate()
 
     # With SPEC running
-    for split in ['train', 'ref_and_val', 'test']:
-        spec_process = subprocess.Popen(spec_command.split())
-        cmd = monitor_cmd_fn(save_data_name='{split}_normal_with_spec.csv'.format(
-            split=split,
-            )
-        )
-        monitor_process = subprocess.Popen(cmd.split())
-        monitor_status = monitor_process.wait()
-        spec_process.terminate()
-        utils.clean_spec()
+    #for split in ['train', 'ref_and_val', 'test']:
+    #    spec_process = subprocess.Popen(spec_command.split())
+    #    cmd = monitor_cmd_fn(save_data_name='{split}_normal_with_spec.csv'.format(
+    #        split=split,
+    #        )
+    #    )
+    #    monitor_process = subprocess.Popen(cmd.split())
+    #    monitor_status = monitor_process.wait()
+    #    spec_process.terminate()
+    #    utils.clean_spec()
 
     for k in attacks.keys():
         attack_process = subprocess.Popen(attacks[k].split())
@@ -126,38 +127,38 @@ if __name__ == '__main__':
         monitor_status = monitor_process.wait()
 
         # Test abnormal with gpg running
-        gpg_process = subprocess.Popen(gpg_command.split())
-        time.sleep(10)
-        cmd = monitor_cmd_fn(save_data_name='test_abnormal_{attack}_with_gpg.csv'.format(
-            attack=k
-            )
-        )
-        print(cmd)
-        monitor_process = subprocess.Popen(cmd.split())
-        monitor_status = monitor_process.wait()
-        gpg_process.terminate()
+    #    gpg_process = subprocess.Popen(gpg_command.split())
+    #    time.sleep(10)
+    #    cmd = monitor_cmd_fn(save_data_name='test_abnormal_{attack}_with_gpg.csv'.format(
+    #        attack=k
+    #        )
+    #    )
+    #    print(cmd)
+    #    monitor_process = subprocess.Popen(cmd.split())
+    #    monitor_status = monitor_process.wait()
+    #    gpg_process.terminate()
 
         # Test abnormal with spec running
-        spec_process = subprocess.Popen(spec_command.split())
-        cmd = monitor_cmd_fn(save_data_name='test_abnormal_{attack}_with_spec.csv'.format(
-            attack=k
-            )
-        )
-        print(cmd)
-        monitor_process = subprocess.Popen(cmd.split())
-        monitor_status = monitor_process.wait()
-        spec_process.terminate()
-        utils.clean_spec()
+     #   spec_process = subprocess.Popen(spec_command.split())
+     #   cmd = monitor_cmd_fn(save_data_name='test_abnormal_{attack}_with_spec.csv'.format(
+     #       attack=k
+     #       )
+     #   )
+     #   print(cmd)
+     #   monitor_process = subprocess.Popen(cmd.split())
+    #    monitor_status = monitor_process.wait()
+    #    spec_process.terminate()
+    #    utils.clean_spec()
 
         attack_process.terminate()
 
     # Clean up
-    cmd = 'sudo chown zechengh ../ -R'
+    cmd = 'sudo chown arnabjyoti ../ -R'
     print(cmd)
     monitor_process = subprocess.Popen(cmd.split())
     monitor_status = monitor_process.wait()
 
-    cmd = 'python2 ../detector/preprocess.py --data_dir {save_data_dir}'.format(
+    cmd = 'python3 ../detector/preprocess.py --data_dir {save_data_dir}'.format(
         save_data_dir=save_data_dir
     )
     print(cmd)

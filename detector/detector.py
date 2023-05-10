@@ -6,6 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 
+import sys
 import time
 import math
 import os
@@ -151,15 +152,31 @@ class Detector(nn.Module):
         assert self.RED_points != None, "Set RED_points first"
         assert len(seq) >= self.RED_collection_len * self.RED_points + 1, "Testing sequence is too short"
 
-        T_pred_start = time.clock()
+        # if you have Python version > 3.3 call process_time()
+        if sys.version_info[0] == 3 and \
+                sys.version_info[1] > 3:
+            T_pred_start = time.process_time()
+        else:
+            T_pred_start = time.clock()
         RE, _ = self._get_reconstruction_error(seq, gpu)
-        T_pred_end = time.clock()
+
+        if sys.version_info[0] == 3 and \
+                sys.version_info[1] > 3:
+            T_pred_end = time.process_time()
+        else:
+            T_pred_end = time.clock()
+
         print("Prediction takes ", (T_pred_end-T_pred_start), "seconds")
 
         p_values = []
         t = 0
 
-        T_KS_start = time.clock()
+        # if you have Python version > 3.3 call process_time()
+        if sys.version_info[0] == 3 and \
+            sys.version_info[1] > 3:
+            T_KS_start = time.process_time()
+        else:
+            T_KS_start = time.clock()
 
         while t + self.RED_collection_len * self.RED_points < len(RE):
             accumulate_idx = np.array(range(t, t + self.RED_collection_len * self.RED_points, self.RED_collection_len))
@@ -189,7 +206,12 @@ class Detector(nn.Module):
             p_values.append(max_p)
             t += 1
 
-        T_KS_end = time.clock()
+        if sys.version_info[0] == 3 and \
+            sys.version_info[1] > 3:
+            T_KS_end = time.process_time()
+        else:
+            T_KS_end = time.clock()
+
         print("Statistical test takes ", (T_KS_end-T_KS_start), "seconds")
 
         p_values = np.array(p_values)

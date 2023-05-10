@@ -7,8 +7,9 @@
 #include <linux/perf_event.h>
 #include <sys/time.h>
 #include <asm/unistd.h>
+#include <errno.h>
 
-#define EVENT_NR 34
+#define EVENT_NR 19
 #define EVENT_CUR 4
 
 uint64_t INTERVAL;
@@ -38,95 +39,96 @@ void event_initialize() {
 	event_monitor[3].event_type = PERF_TYPE_HW_CACHE;
 	event_monitor[3].event_config = (PERF_COUNT_HW_CACHE_L1D)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
 
+	//event_monitor[4].event_type = PERF_TYPE_HW_CACHE;
+	//event_monitor[4].event_config = (PERF_COUNT_HW_CACHE_L1D)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+
+	/*
 	event_monitor[4].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[4].event_config = (PERF_COUNT_HW_CACHE_L1D)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[4].event_config = (PERF_COUNT_HW_CACHE_L1D)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
 	event_monitor[5].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[5].event_config = (PERF_COUNT_HW_CACHE_L1D)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[5].event_config = (PERF_COUNT_HW_CACHE_L1I)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
 	event_monitor[6].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[6].event_config = (PERF_COUNT_HW_CACHE_L1I)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[6].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
 
 	event_monitor[7].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[7].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	event_monitor[7].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
 	event_monitor[8].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[8].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[8].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
 
 	event_monitor[9].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[9].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	event_monitor[9].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
 	event_monitor[10].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[10].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[10].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
 
 	event_monitor[11].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[11].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	event_monitor[11].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);*/
+
+	event_monitor[4].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[4].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+
+	event_monitor[5].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[5].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+
+	event_monitor[6].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[6].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+
+	event_monitor[7].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[7].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+
+	//event_monitor[8].event_type = PERF_TYPE_HW_CACHE;
+	//event_monitor[8].event_config = (PERF_COUNT_HW_CACHE_ITLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+
+	//event_monitor[9].event_type = PERF_TYPE_HW_CACHE;
+	//event_monitor[9].event_config = (PERF_COUNT_HW_CACHE_ITLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+
+	event_monitor[8].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[8].event_config = (PERF_COUNT_HW_CACHE_BPU)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+
+	event_monitor[9].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[9].event_config = (PERF_COUNT_HW_CACHE_BPU)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+
+	event_monitor[10].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[10].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+
+	event_monitor[11].event_type = PERF_TYPE_HW_CACHE;
+	event_monitor[11].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
 	event_monitor[12].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[12].event_config = (PERF_COUNT_HW_CACHE_LL)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[12].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
 
 	event_monitor[13].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[13].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	event_monitor[13].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
-	event_monitor[14].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[14].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	//event_monitor[14].event_type = PERF_TYPE_HW_CACHE;
+	//event_monitor[14].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
 
-	event_monitor[15].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[15].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	//event_monitor[15].event_type = PERF_TYPE_HW_CACHE;
+	//event_monitor[15].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
 
-	event_monitor[16].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[16].event_config = (PERF_COUNT_HW_CACHE_DTLB)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[14].event_type = PERF_TYPE_HARDWARE;
+	event_monitor[14].event_config = PERF_COUNT_HW_CPU_CYCLES;
 
-	event_monitor[17].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[17].event_config = (PERF_COUNT_HW_CACHE_ITLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	event_monitor[15].event_type = PERF_TYPE_HARDWARE;
+	event_monitor[15].event_config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
 
-	event_monitor[18].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[18].event_config = (PERF_COUNT_HW_CACHE_ITLB)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[16].event_type = PERF_TYPE_HARDWARE;
+	event_monitor[16].event_config = PERF_COUNT_HW_BRANCH_MISSES;
 
-	event_monitor[19].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[19].event_config = (PERF_COUNT_HW_CACHE_BPU)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	event_monitor[17].event_type = PERF_TYPE_SOFTWARE;
+	event_monitor[17].event_config = PERF_COUNT_SW_PAGE_FAULTS;
 
-	event_monitor[20].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[20].event_config = (PERF_COUNT_HW_CACHE_BPU)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
+	event_monitor[18].event_type = PERF_TYPE_SOFTWARE;
+	event_monitor[18].event_config = PERF_COUNT_SW_CONTEXT_SWITCHES;
 
-	event_monitor[21].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[21].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
+	//event_monitor[9].event_type = PERF_TYPE_HARDWARE;
+	//event_monitor[9].event_config = PERF_COUNT_HW_STALLED_CYCLES_FRONTEND;
 
-	event_monitor[22].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[22].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_READ << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
-
-	event_monitor[23].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[23].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
-
-	event_monitor[24].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[24].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_WRITE << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
-
-	event_monitor[25].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[25].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_ACCESS << 16);
-
-	event_monitor[26].event_type = PERF_TYPE_HW_CACHE;
-	event_monitor[26].event_config = (PERF_COUNT_HW_CACHE_NODE)|(PERF_COUNT_HW_CACHE_OP_PREFETCH << 8)|(PERF_COUNT_HW_CACHE_RESULT_MISS << 16);
-
-	event_monitor[27].event_type = PERF_TYPE_HARDWARE;
-	event_monitor[27].event_config = PERF_COUNT_HW_CPU_CYCLES;
-
-	event_monitor[28].event_type = PERF_TYPE_HARDWARE;
-	event_monitor[28].event_config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
-
-	event_monitor[29].event_type = PERF_TYPE_HARDWARE;
-	event_monitor[29].event_config = PERF_COUNT_HW_BRANCH_MISSES;
-
-	event_monitor[30].event_type = PERF_TYPE_SOFTWARE;
-	event_monitor[30].event_config = PERF_COUNT_SW_PAGE_FAULTS;
-
-	event_monitor[31].event_type = PERF_COUNT_SW_CONTEXT_SWITCHES;
-	event_monitor[31].event_config = PERF_COUNT_SW_PAGE_FAULTS;
-
-	event_monitor[32].event_type = PERF_TYPE_HARDWARE;
-	event_monitor[32].event_config = PERF_COUNT_HW_STALLED_CYCLES_FRONTEND;
-
-	event_monitor[33].event_type = PERF_TYPE_HARDWARE;
-	event_monitor[33].event_config = PERF_COUNT_HW_STALLED_CYCLES_BACKEND;
+	//event_monitor[10].event_type = PERF_TYPE_HARDWARE;
+	//event_monitor[10].event_config = PERF_COUNT_HW_STALLED_CYCLES_BACKEND;
 };
 
 
@@ -168,7 +170,7 @@ int main(int argc, char **argv) {
 		pe[i].disabled = 1;
 		pe[i].inherit = 1;
 		pe[i].pinned = 1;
-		pe[i].exclude_kernel = 0;
+		pe[i].exclude_kernel = 1;
 		pe[i].exclude_user = 0;
 		pe[i].exclude_hv = 0;
 		pe[i].exclude_host = 0;
@@ -179,13 +181,15 @@ int main(int argc, char **argv) {
 	uint64_t start_cycle;
 
 	int event_index;
+	int errno;
 	for (j=0; j<ROUND; j++) {
 		for (i=0; i<(EVENT_NR/EVENT_CUR); i++) {
 			for (k=0; k<EVENT_CUR; k++) {
 				event_index = i*EVENT_CUR+k;
 				fd[event_index] = syscall(__NR_perf_event_open, &pe[event_index], -1, cpuid, -1, 0);
 				if (fd[event_index] == -1) {
-					fprintf(stderr, "Error opening leader %llx\n", pe[event_index].config);
+					fprintf(stderr, "Error opening leader %llx with event index %d. Error: %d, Error string: %s\n", pe[event_index].config,
+							event_index, errno, strerror(errno));
 					exit(EXIT_FAILURE);
 				}
 
@@ -213,7 +217,7 @@ int main(int argc, char **argv) {
 			event_index = i*EVENT_CUR+k;
 			fd[event_index] = syscall(__NR_perf_event_open, &pe[event_index], -1, cpuid, -1, 0);
 			if (fd[event_index] == -1) {
-				fprintf(stderr, "Error opening leader %llx\n", pe[event_index].config);
+				fprintf(stderr, "Error opening leader %llx. Error: %d, Error string: %s\n", pe[event_index].config, errno, strerror(errno));
 				exit(EXIT_FAILURE);
 			}
 

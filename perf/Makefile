@@ -3,10 +3,10 @@ CC = gcc
 TARGET = event_open_user
 obj-m += event_open_kernel.o
 
-all: kernel user gettime
+all: user gettime
 
 kernel:
-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+	$(MAKE) -C $(KDIR) SUBDIRS=$(shell pwd) modules
 
 user: $(TARGET).c
 	$(CC) -o $(TARGET) $(TARGET).c
